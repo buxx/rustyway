@@ -7,3 +7,4 @@ edition = "2024"
 axum = "0.8.7"
 cmd_lib = "2.0.0"
 tokio = "1.48.0"
+serde = { version = "1", features = ["derive"] }

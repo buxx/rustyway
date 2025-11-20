@@ -1,9 +1,10 @@
 use axum::{
-    Router,
+    Form, Router,
     response::Html,
     routing::{get, post},
 };
 use cmd_lib::run_cmd;
+use serde::Deserialize;
 
 #[tokio::main(flavor = "current_thread")]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -16,12 +17,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 
 async fn root() -> Html<String> {
-    let title = "Restart server ?";
+    let title = "🪁 Restart server ?";
 
     Html(format!(
         "
         <h1>{}</h1>
-        <form action=\"/\">
+        <form action=\"/\" method=\"post\">
+            <input type=\"text\" name=\"password\" />
             <input type=\"submit\" value=\"Yes\" />
         </form>
     ",
@@ -29,7 +31,16 @@ async fn root() -> Html<String> {
     ))
 }
 
-async fn do_it() -> Html<&'static str> {
+#[derive(Deserialize)]
+struct DoIt {
+    password: String,
+}
+
+async fn do_it(Form(payload): Form<DoIt>) -> Html<&'static str> {
+    if &payload.password != "zinzins" {
+        return Html("<h1>🤔</h1>");
+    }
+
     std::thread::spawn(|| {
         let _ = run_cmd! (
             cd /
@@ -39,5 +50,5 @@ async fn do_it() -> Html<&'static str> {
         );
     });
 
-    Html("On the way !")
+    Html("✨ On the way !")
 }
