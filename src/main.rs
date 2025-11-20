@@ -5,7 +5,6 @@ use axum::{
 };
 use cmd_lib::run_cmd;
 use serde::Deserialize;
-use tracing_unwrap::ResultExt;
 
 #[tokio::main(flavor = "current_thread")]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -51,5 +50,5 @@ async fn do_it(Form(payload): Form<DoIt>) -> Html<String> {
         return Html(format!("‼️ {error}"));
     }
 
-    Html("✨ Done !".to_string())
+    Html("✨ Correctly restarted ! Is now starting".to_string())
 }
