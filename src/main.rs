@@ -37,20 +37,19 @@ struct DoIt {
     password: String,
 }
 
-async fn do_it(Form(payload): Form<DoIt>) -> Html<&'static str> {
+async fn do_it(Form(payload): Form<DoIt>) -> Html<String> {
     if &payload.password != "zinzins" {
-        return Html("<h1>🤔</h1>");
+        return Html("<h1>🤔</h1>".to_string());
     }
 
-    std::thread::spawn(|| {
-        run_cmd! (
+    if let Err(error) = run_cmd! (
             cd /
             /usr/bin/docker compose -f docker-compose-enshrouded.yml stop
             sleep 5
             /usr/bin/docker compose -f docker-compose-enshrouded.yml start
-        )
-        .unwrap_or_log();
-    });
+    ) {
+        return Html(format!("‼️ {error}"));
+    }
 
-    Html("✨ On the way !")
+    Html("✨ On the way !".to_string())
 }
