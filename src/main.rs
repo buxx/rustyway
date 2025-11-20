@@ -5,6 +5,7 @@ use axum::{
 };
 use cmd_lib::run_cmd;
 use serde::Deserialize;
+use tracing_unwrap::ResultExt;
 
 #[tokio::main(flavor = "current_thread")]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -42,12 +43,13 @@ async fn do_it(Form(payload): Form<DoIt>) -> Html<&'static str> {
     }
 
     std::thread::spawn(|| {
-        let _ = run_cmd! (
+        run_cmd! (
             cd /
             /usr/bin/docker compose -f docker-compose-enshrouded.yml stop
             sleep 5
             /usr/bin/docker compose -f docker-compose-enshrouded.yml start
-        );
+        )
+        .unwrap_or_log();
     });
 
     Html("✨ On the way !")
