@@ -51,5 +51,5 @@ async fn do_it(Form(payload): Form<DoIt>) -> Html<String> {
         return Html(format!("‼️ {error}"));
     }
 
-    Html("✨ On the way !".to_string())
+    Html("✨ Done !".to_string())
 }
