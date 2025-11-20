@@ -43,10 +43,10 @@ async fn do_it(Form(payload): Form<DoIt>) -> Html<String> {
     }
 
     if let Err(error) = run_cmd! (
-            cd /
-            /usr/bin/docker compose -f docker-compose-enshrouded.yml stop
-            sleep 5
-            /usr/bin/docker compose -f docker-compose-enshrouded.yml start
+            cd /;
+            /usr/bin/docker compose -f docker-compose-enshrouded.yml stop;
+            sleep 5;
+            /usr/bin/docker compose -f docker-compose-enshrouded.yml start;
     ) {
         return Html(format!("‼️ {error}"));
     }
